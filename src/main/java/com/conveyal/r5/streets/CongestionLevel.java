@@ -31,11 +31,14 @@ public enum CongestionLevel {
 
     public static CongestionLevel fromProfileRequest(ProfileRequest profileRequest) {
         // set the congestion level (rush hour/off peak) depending on week day and time of day
-        DayOfWeek dayOfWeek = profileRequest.date.getDayOfWeek();
-        if (dayOfWeek.equals(DayOfWeek.SUNDAY) || dayOfWeek.equals(DayOfWeek.SATURDAY))
-            return CongestionLevel.OFF_PEAK;
-        else
-            return CongestionLevel.fromFromTime(profileRequest.fromTime);
+        if (profileRequest.date != null) {
+            DayOfWeek dayOfWeek = profileRequest.date.getDayOfWeek();
+            if (dayOfWeek.equals(DayOfWeek.SUNDAY) || dayOfWeek.equals(DayOfWeek.SATURDAY))
+                return CongestionLevel.OFF_PEAK;
+            else
+                return CongestionLevel.fromFromTime(profileRequest.fromTime);
+        } else
+            return CongestionLevel.AVERAGE;
     }
 
 }
