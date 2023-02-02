@@ -1,7 +1,6 @@
 package com.conveyal.r5.streets;
 
 import com.conveyal.r5.common.GeometryUtils;
-import com.conveyal.r5.labeling.StreetClass;
 import com.conveyal.r5.profile.ProfileRequest;
 import com.conveyal.r5.profile.StreetMode;
 import org.apache.commons.math3.util.FastMath;

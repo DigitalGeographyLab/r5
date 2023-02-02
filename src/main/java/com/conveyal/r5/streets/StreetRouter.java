@@ -468,6 +468,10 @@ public class StreetRouter {
         else
             congestionLevel = CongestionLevel.fromFromTime(profileRequest.fromTime);
 
+        // TODO: this following line does not work, since timeCalculator implements a TraversalTimeCalculator
+        // and does not necessarily have a .congestionLevel
+        //timeCalculator.congestionLevel = congestionLevel;
+
         // Set up goal direction.
         if (destinationSplit != null) {
             // This search has a destination, so enable A* goal direction.

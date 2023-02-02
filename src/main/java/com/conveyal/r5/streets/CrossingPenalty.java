@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 /**
  * Crossing penalties according to Jaakkonen (2013)’s analysis for the Helsinki metropolitan area
- * See: http://urn.fi/URN:NBN:fi-fe2017112252365, table 28 on page 61,
+ * See: <a href="http://urn.fi/URN:NBN:fi-fe2017112252365">...</a>, table 28 on page 61,
  *
  * Note that delays are in integer seconds, as com.conveyal.r5.streets.BasicTraversalTimeCalculator.turnTimeSeconds
  * returns full seconds, only (probably a question of performance?)
