@@ -460,18 +460,6 @@ public class StreetRouter {
         // FIXME this class is supposed to be throw-away, should we be reusing instances at all? change this variable name to be clearer.
         final int tmpTimeLimitSeconds;
 
-        // set the congestion level (rush hour/off peak) depending on week day and time of day
-        CongestionLevel congestionLevel;
-        DayOfWeek dayOfWeek = profileRequest.date.getDayOfWeek();
-        if (dayOfWeek.equals(DayOfWeek.SUNDAY) || dayOfWeek.equals(DayOfWeek.SATURDAY))
-            congestionLevel = CongestionLevel.OFF_PEAK;
-        else
-            congestionLevel = CongestionLevel.fromFromTime(profileRequest.fromTime);
-
-        // TODO: this following line does not work, since timeCalculator implements a TraversalTimeCalculator
-        // and does not necessarily have a .congestionLevel
-        //timeCalculator.congestionLevel = congestionLevel;
-
         // Set up goal direction.
         if (destinationSplit != null) {
             // This search has a destination, so enable A* goal direction.
@@ -765,6 +753,8 @@ public class StreetRouter {
         // Start on the forward edge of the pair that was split
         EdgeStore.Edge e = streetLayer.edgeStore.getCursor(split.edge);
 
+        CongestionLevel congestionLevel = CongestionLevel.fromProfileRequest(profileRequest);
+
         TIntList edgeList;
         if (profileRequest.reverseSearch) {
             edgeList = streetLayer.outgoingEdges.get(split.vertex1);
@@ -782,7 +772,7 @@ public class StreetRouter {
                         ret.streetMode = s.streetMode;
 
                         // figure out the turn cost
-                        int turnCost = this.timeCalculator.turnTimeSeconds(s.backEdge, split.edge, s.streetMode);
+                        int turnCost = this.timeCalculator.turnTimeSeconds(s.backEdge, split.edge, s.streetMode, congestionLevel);
                         int traversalCost = (int) Math.round(split.distance0_mm / 1000d / e.calculateSpeed(profileRequest, s.streetMode));
 
                         // TODO length of perpendicular
@@ -811,7 +801,7 @@ public class StreetRouter {
                 }
                 State ret = new State(-1, split.edge + 1, state);
                 ret.streetMode = state.streetMode;
-                int turnCost = this.timeCalculator.turnTimeSeconds(state.backEdge, split.edge + 1, state.streetMode);
+                int turnCost = this.timeCalculator.turnTimeSeconds(state.backEdge, split.edge + 1, state.streetMode, congestionLevel);
                 int traversalCost = (int) Math.round(split.distance1_mm / 1000d / e.calculateSpeed(profileRequest, state.streetMode));
                 ret.distance += split.distance1_mm;
                 // TODO length of perpendicular

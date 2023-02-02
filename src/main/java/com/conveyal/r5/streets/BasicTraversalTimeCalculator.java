@@ -27,16 +27,9 @@ public class BasicTraversalTimeCalculator implements TraversalTimeCalculator {
 
     public boolean driveOnRight; // TODO instead of a field, this should be a different implementation class
 
-    public CongestionLevel congestionLevel;
-
     public BasicTraversalTimeCalculator (StreetLayer layer, boolean driveOnRight) {
-        this(layer, driveOnRight, CongestionLevel.AVERAGE);
-    }
-
-    public BasicTraversalTimeCalculator (StreetLayer layer, boolean driveOnRight, CongestionLevel congestionLevel) {
-        this.layer = layer;
+         this.layer = layer;
         this.driveOnRight = driveOnRight;
-        this.congestionLevel = congestionLevel;
     }
 
     @Override
@@ -52,11 +45,11 @@ public class BasicTraversalTimeCalculator implements TraversalTimeCalculator {
      * TODO pull this out into an interface to allow generalization to data from generalized cost tags
      */
     @Override
-    public int turnTimeSeconds (int fromEdge, int toEdge, StreetMode streetMode) {
+    public int turnTimeSeconds (int fromEdge, int toEdge, StreetMode streetMode, CongestionLevel congestionLevel) {
         if (streetMode == StreetMode.CAR) {
             double angle = calculateNewTurnAngle(fromEdge, toEdge);
             if (angle < 27)
-                return straightOnDelay(fromEdge);
+                return straightOnDelay(fromEdge, congestionLevel);
             else if (angle < 153)
                 return driveOnRight ? LEFT_TURN : RIGHT_TURN;
             else if (angle < 207)
@@ -64,7 +57,7 @@ public class BasicTraversalTimeCalculator implements TraversalTimeCalculator {
             else if (angle < 333)
                 return driveOnRight ? RIGHT_TURN : LEFT_TURN;
             else
-                return straightOnDelay(fromEdge);
+                return straightOnDelay(fromEdge, congestionLevel);
         }
         return 0;
     }
@@ -73,7 +66,7 @@ public class BasicTraversalTimeCalculator implements TraversalTimeCalculator {
      * Get the delay for driving straight over a crossing, depending on fromEdge’s StreetClass, and the time of the day
      * Based on Jaakkonen (2013)
      */
-    private int straightOnDelay(int fromEdge){
+    private int straightOnDelay(int fromEdge, CongestionLevel congestionLevel){
         EdgeStore.Edge e = layer.edgeStore.getCursor(fromEdge);
         Byte streetClassCode = e.getStreetClassCode();
         return CrossingPenalty.getDelay(
