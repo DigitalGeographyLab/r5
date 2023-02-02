@@ -1,6 +1,7 @@
 package com.conveyal.r5.streets;
 
 import com.conveyal.r5.common.GeometryUtils;
+import com.conveyal.r5.labeling.StreetClass;
 import com.conveyal.r5.profile.ProfileRequest;
 import com.conveyal.r5.profile.StreetMode;
 import org.apache.commons.math3.util.FastMath;
@@ -56,7 +57,7 @@ public class BasicTraversalTimeCalculator implements TraversalTimeCalculator {
         if (streetMode == StreetMode.CAR) {
             double angle = calculateNewTurnAngle(fromEdge, toEdge);
             if (angle < 27)
-                return STRAIGHT_ON;
+                return straightOnDelay(fromEdge);
             else if (angle < 153)
                 return driveOnRight ? LEFT_TURN : RIGHT_TURN;
             else if (angle < 207)
@@ -67,6 +68,20 @@ public class BasicTraversalTimeCalculator implements TraversalTimeCalculator {
                 return STRAIGHT_ON;
         }
         return 0;
+    }
+
+    /**
+     * Get the delay for driving straight over a crossing, depending on fromEdge’s StreetClass, and the time of the day
+     * Based on Jaakkonen (2013)
+     */
+    private int straightOnDelay(int fromEdge){
+        EdgeStore.Edge e = layer.edgeStore.getCursor(fromEdge);
+        StreetClass streetClass = new StreetClass(e.getStreetClassCode()
+        int delay = CrossingPenalty.getDelay(
+                congestionLevel,
+                JaakkonenStreetClass.fromR5StreetClass(streetClass)
+        );
+        return delay;
     }
 
     /**

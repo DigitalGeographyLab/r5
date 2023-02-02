@@ -14,7 +14,6 @@ public enum JaakkonenStreetClass {
     CLASS_4_5_6;
 }
 
-/*
     public static JaakkonenStreetClass fromR5StreetClass(StreetClass streetClass) {
         if(streetClass.equals(StreetClass.MOTORWAY) || streetClass.equals(StreetClass.PRIMARY)){
             return JaakkonenStreetClass.CLASS_1_2;
@@ -28,4 +27,3 @@ public enum JaakkonenStreetClass {
     }
 
 }
-*/
