@@ -27,9 +27,16 @@ public class BasicTraversalTimeCalculator implements TraversalTimeCalculator {
 
     public boolean driveOnRight; // TODO instead of a field, this should be a different implementation class
 
+    public CongestionLevel congestionLevel;
+
     public BasicTraversalTimeCalculator (StreetLayer layer, boolean driveOnRight) {
+        this(layer, driveOnRight, CongestionLevel.AVERAGE);
+    }
+
+    public BasicTraversalTimeCalculator (StreetLayer layer, boolean driveOnRight, CongestionLevel congestionLevel) {
         this.layer = layer;
         this.driveOnRight = driveOnRight;
+        this.congestionLevel = congestionLevel;
     }
 
     @Override
