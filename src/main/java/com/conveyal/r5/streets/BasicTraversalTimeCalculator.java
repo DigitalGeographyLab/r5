@@ -65,7 +65,7 @@ public class BasicTraversalTimeCalculator implements TraversalTimeCalculator {
             else if (angle < 333)
                 return driveOnRight ? RIGHT_TURN : LEFT_TURN;
             else
-                return STRAIGHT_ON;
+                return straightOnDelay(fromEdge);
         }
         return 0;
     }
@@ -76,12 +76,11 @@ public class BasicTraversalTimeCalculator implements TraversalTimeCalculator {
      */
     private int straightOnDelay(int fromEdge){
         EdgeStore.Edge e = layer.edgeStore.getCursor(fromEdge);
-        StreetClass streetClass = new StreetClass(e.getStreetClassCode()
-        int delay = CrossingPenalty.getDelay(
+        Byte streetClassCode = e.getStreetClassCode();
+        return CrossingPenalty.getDelay(
                 congestionLevel,
-                JaakkonenStreetClass.fromR5StreetClass(streetClass)
+                JaakkonenStreetClass.fromR5StreetClassCode(streetClassCode)
         );
-        return delay;
     }
 
     /**

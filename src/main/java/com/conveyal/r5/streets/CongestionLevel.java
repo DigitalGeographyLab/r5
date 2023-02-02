@@ -7,7 +7,23 @@ package com.conveyal.r5.streets;
 public enum CongestionLevel {
     RUSH_HOUR,
     OFF_PEAK,
-    AVERAGE
+    AVERAGE;
+
+    public static CongestionLevel fromFromTime(int secondsSinceMidnight) {
+        /*
+         * based on https://www.tomtom.com/traffic-index/helsinki-traffic/
+         */
+        if (secondsSinceMidnight < 25_200)  // 7:00
+            return CongestionLevel.OFF_PEAK;
+        else if (secondsSinceMidnight < 36_000)  // 10:00
+            return CongestionLevel.RUSH_HOUR;
+        else if (secondsSinceMidnight < 50_400)  // 14:00
+            return CongestionLevel.AVERAGE;
+        else if (secondsSinceMidnight < 64800)  // 18:00
+            return CongestionLevel.RUSH_HOUR;
+        else
+            return CongestionLevel.OFF_PEAK;
+    }
 
 }
 

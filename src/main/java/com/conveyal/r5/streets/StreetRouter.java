@@ -28,6 +28,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.Serializable;
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -458,6 +459,14 @@ public class StreetRouter {
         // (since timeLimitSeconds is MAX_INTEGER not 0)
         // FIXME this class is supposed to be throw-away, should we be reusing instances at all? change this variable name to be clearer.
         final int tmpTimeLimitSeconds;
+
+        // set the congestion level (rush hour/off peak) depending on week day and time of day
+        CongestionLevel congestionLevel;
+        DayOfWeek dayOfWeek = profileRequest.date.getDayOfWeek();
+        if (dayOfWeek.equals(DayOfWeek.SUNDAY) || dayOfWeek.equals(DayOfWeek.SATURDAY))
+            congestionLevel = CongestionLevel.OFF_PEAK;
+        else
+            congestionLevel = CongestionLevel.fromFromTime(profileRequest.fromTime);
 
         // Set up goal direction.
         if (destinationSplit != null) {
