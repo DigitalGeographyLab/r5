@@ -6,7 +6,7 @@ on:
   # The push event's ref reveals the branch name for S3 upload, unlike pull_request which sees the merge target.
   push
   # Try to catch PRs from outside authors, which don't need to be uploaded to S3.
-  # pull_request:
+  pull_request
   #   branches:
   #     - dev
   #     - master
