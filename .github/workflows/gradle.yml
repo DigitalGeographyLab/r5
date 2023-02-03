@@ -4,8 +4,8 @@ name: Java CI
 on:
   # Should catch merged pull requests, pushes to Conveyal PR branches, and tags.
   # The push event's ref reveals the branch name for S3 upload, unlike pull_request which sees the merge target.
-  push
-  pull_request
+  push:
+  pull_request:
   # Try to catch PRs from outside authors, which don't need to be uploaded to S3.
   # pull_request:
   #   branches:
