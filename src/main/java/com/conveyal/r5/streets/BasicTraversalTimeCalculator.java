@@ -28,7 +28,7 @@ public class BasicTraversalTimeCalculator implements TraversalTimeCalculator {
     public boolean driveOnRight; // TODO instead of a field, this should be a different implementation class
 
     public BasicTraversalTimeCalculator (StreetLayer layer, boolean driveOnRight) {
-         this.layer = layer;
+        this.layer = layer;
         this.driveOnRight = driveOnRight;
     }
 
