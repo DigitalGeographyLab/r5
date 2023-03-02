@@ -52,4 +52,4 @@ jobs:
       # Supply access token to build.gradle (used in publishing.repositories.maven.credentials)
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: gradle publish
+      run: gradle publish --info
