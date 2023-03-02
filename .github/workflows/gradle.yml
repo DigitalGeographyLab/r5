@@ -49,9 +49,6 @@ jobs:
     - name: Show version string
       run: gradle -q printVersion | head -n1
     - name: Build and Test
-      uses: gradle/gradle-build-action@v2
-      with:
-        gradle-version: 7.5.1
       run: gradle build
     - name: Ensure shadow JAR is runnable as local backend
       run: |
