@@ -49,6 +49,8 @@ jobs:
     - name: Show version string
       run: gradle -q printVersion | head -n1
     - name: Build and Test
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
       run: gradle build
     - name: Ensure shadow JAR is runnable as local backend
       run: |
