@@ -218,6 +218,7 @@ public class EdgeStore implements Serializable {
         speeds = new TShortArrayList(initialSize);
         // Vertex indices, geometries, and lengths are shared between pairs of forward and backward edges.
         int initialEdgePairs = initialSize / 2;
+        bicycleSpeeds = new TShortArrayList(initialEdgePairs);
         fromVertices = new TIntArrayList(initialEdgePairs);
         toVertices = new TIntArrayList(initialEdgePairs);
         geometries = new ArrayList<>(initialEdgePairs);
