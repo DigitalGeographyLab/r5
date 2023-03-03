@@ -1194,14 +1194,6 @@ public class StreetLayer implements Serializable, Cloneable {
             }
         }
 
-        // Now set characteristics that differ in the forward and backward directions.
-        newEdge.setFlags(forwardFlags);
-        newEdge.setSpeed(forwardSpeed);
-        // Step ahead to the backward edge in the same pair.
-        newEdge.advance();
-        newEdge.setFlags(backFlags);
-        newEdge.setSpeed(backwardSpeed);
-
         // Read bicycle speeds from tags added by Vuokko’s Strava analysis
         // This assumes perfectly formatted tags
         if (way.getTag("DGL:bicyclespeed") != null) {
@@ -1209,6 +1201,14 @@ public class StreetLayer implements Serializable, Cloneable {
         } else {
             newEdge.setBicycleSpeedKph(0); // HUOM: hard-coded default value!
         }
+
+        // Now set characteristics that differ in the forward and backward directions.
+        newEdge.setFlags(forwardFlags);
+        newEdge.setSpeed(forwardSpeed);
+        // Step ahead to the backward edge in the same pair.
+        newEdge.advance();
+        newEdge.setFlags(backFlags);
+        newEdge.setSpeed(backwardSpeed);
 
     }
 
