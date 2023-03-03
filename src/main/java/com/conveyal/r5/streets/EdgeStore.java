@@ -100,6 +100,11 @@ public class EdgeStore implements Serializable {
      */
     public TShortList speeds;
 
+    /**
+     * bicycle speeds, derived by Vuokko from Strava data
+     */
+    public TShortList bicycleSpeeds;
+
     /** The index of the origin vertex of each edge pair in the forward direction. One entry for each edge pair. */
     public TIntList fromVertices;
 
@@ -546,6 +551,22 @@ public class EdgeStore implements Serializable {
         /** Note, this is expecting weird units and should be hidden. Use setSpeedKph. */
         public void setSpeed(short speed) {
             speeds.set(edgeIndex, speed);
+        }
+
+        public float getBicycleSpeedMetersPerSecond() {
+            return (float) ((bicycleSpeeds.get(edgeIndex) / 100.));
+        }
+        public float getBicycleSpeedKph () {
+            return (float) ((bicycleSpeeds.get(edgeIndex) / 100.) * 3.6);
+        }
+
+        public void setBicycleSpeedKph (double bicycleSpeedKph) {
+            bicycleSpeeds.set(edgeIndex, (short)(bicycleSpeedKph / 3.6 * 100));
+        }
+
+        // centimeters per second - cf. speeds
+        public void setBicycleSpeed(short bicycleSpeed) {
+            bicycleSpeeds.set(edgeIndex, bicycleSpeed);
         }
 
         public int getLengthMm () {

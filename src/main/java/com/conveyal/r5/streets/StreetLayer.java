@@ -1202,6 +1202,14 @@ public class StreetLayer implements Serializable, Cloneable {
         newEdge.setFlags(backFlags);
         newEdge.setSpeed(backwardSpeed);
 
+        // Read bicycle speeds from tags added by Vuokko’s Strava analysis
+        // This assumes perfectly formatted tags
+        if (way.getTag("DGL:bicyclespeed") != null) {
+            newEdge.setBicycleSpeedKph((float) Double.parseDouble(way.getTag("DGL:bicyclespeed")));
+        } else {
+            newEdge.setBicycleSpeedKph(0); // HUOM: hard-coded default value!
+        }
+
     }
 
     public void indexStreets () {
