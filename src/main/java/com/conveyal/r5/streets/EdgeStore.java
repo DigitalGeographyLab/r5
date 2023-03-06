@@ -100,6 +100,11 @@ public class EdgeStore implements Serializable {
      */
     public TShortList speeds;
 
+    /**
+     * bicycle speeds, derived by Vuokko from Strava data
+     */
+    public TShortList bicycleSpeeds;
+
     /** The index of the origin vertex of each edge pair in the forward direction. One entry for each edge pair. */
     public TIntList fromVertices;
 
@@ -211,8 +216,9 @@ public class EdgeStore implements Serializable {
         // There are separate flags and speeds entries for the forward and backward edges in each pair.
         flags = new TIntArrayList(initialSize);
         speeds = new TShortArrayList(initialSize);
-        // Vertex indices, geometries, and lengths are shared between pairs of forward and backward edges.
+        // Vertex indices, bicycle speeds, geometries, and lengths are shared between pairs of forward and backward edges.
         int initialEdgePairs = initialSize / 2;
+        bicycleSpeeds = new TShortArrayList(initialEdgePairs);
         fromVertices = new TIntArrayList(initialEdgePairs);
         toVertices = new TIntArrayList(initialEdgePairs);
         geometries = new ArrayList<>(initialEdgePairs);
@@ -362,6 +368,8 @@ public class EdgeStore implements Serializable {
         streetClasses.add(StreetClass.OTHER.code);
         inAngles.add((byte) 0);
         outAngles.add((byte) 0);
+
+        bicycleSpeeds.add((short) 0);
 
         // Speed and flags are stored separately for each edge in a pair (unlike length, geom, etc.)
 
@@ -548,6 +556,26 @@ public class EdgeStore implements Serializable {
             speeds.set(edgeIndex, speed);
         }
 
+        public short getBicycleSpeed() {
+            return bicycleSpeeds.get(edgeIndex / 2);
+        }
+
+        public float getBicycleSpeedMetersPerSecond() {
+            return (float) ((bicycleSpeeds.get(edgeIndex / 2) / 100.));
+        }
+        public float getBicycleSpeedKph () {
+            return (float) ((bicycleSpeeds.get(edgeIndex / 2) / 100.) * 3.6);
+        }
+
+        public void setBicycleSpeedKph (double bicycleSpeedKph) {
+            bicycleSpeeds.set(edgeIndex / 2, (short)(bicycleSpeedKph / 3.6 * 100));
+        }
+
+        // centimeters per second - cf. speeds
+        public void setBicycleSpeed(short bicycleSpeed) {
+            bicycleSpeeds.set(edgeIndex / 2, bicycleSpeed);
+        }
+
         public int getLengthMm () {
             return lengths_mm.get(pairIndex);
         }
@@ -567,6 +595,7 @@ public class EdgeStore implements Serializable {
             flags.set(backEdge, otherStore.flags.get(otherBackEdge));
             speeds.set(foreEdge, otherStore.speeds.get(otherForeEdge));
             speeds.set(backEdge, otherStore.speeds.get(otherBackEdge));
+            bicycleSpeeds.set(pairIndex, otherStore.bicycleSpeeds.get(other.pairIndex));
             streetClasses.set(pairIndex, otherStore.streetClasses.get(other.pairIndex));
         }
 
@@ -1286,6 +1315,7 @@ public class EdgeStore implements Serializable {
         copy.flags = new TIntAugmentedList(flags);
         // This is a deep copy, we should do an extend-copy but need a new class for that. Can we just use ints?
         copy.speeds = new TShortArrayList(speeds);
+        copy.bicycleSpeeds = new TShortArrayList(bicycleSpeeds);
         // Vertex indices, geometries, and lengths are shared between pairs of forward and backward edges.
         copy.fromVertices = new TIntAugmentedList(fromVertices);
         copy.toVertices = new TIntAugmentedList(toVertices);

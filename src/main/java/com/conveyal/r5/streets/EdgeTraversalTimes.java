@@ -25,7 +25,14 @@ public class EdgeTraversalTimes implements TraversalTimeCalculator {
         if (streetMode == StreetMode.WALK) {
             return walkTraversalTimes.traversalTimeSeconds(currentEdge, req.walkSpeed);
         } else if (streetMode == StreetMode.BICYCLE) {
-            return bikeTraversalTimes.traversalTimeSeconds(currentEdge, req.bikeSpeed);
+            // If we assigned a 'DGL:bicyclespeed' tag to the way, use that information,
+            // otherwise traverse with the bicycle speed set in the request
+            float bicycleSpeed = currentEdge.getBicycleSpeedMetersPerSecond();
+            if (bicycleSpeed > 0){
+                return (int)(currentEdge.getLengthM() / bicycleSpeed);
+            } else {
+                return bikeTraversalTimes.traversalTimeSeconds(currentEdge, req.bikeSpeed);
+            }
         } else { // CAR
             return (int)(currentEdge.getLengthM() / currentEdge.getCarSpeedMetersPerSecond());
         }
