@@ -1199,7 +1199,7 @@ public class StreetLayer implements Serializable, Cloneable {
         if (way.getTag("DGL:bicyclespeed") != null) {
             newEdge.setBicycleSpeedKph((float) Double.parseDouble(way.getTag("DGL:bicyclespeed")));
         } else {
-            newEdge.setBicycleSpeedKph(0); // HUOM: hard-coded default value!
+            newEdge.setBicycleSpeedKph(0.0); // HUOM: hard-coded default value!
         }
 
         // Now set characteristics that differ in the forward and backward directions.
