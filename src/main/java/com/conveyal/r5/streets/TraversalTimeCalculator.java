@@ -39,7 +39,7 @@ public interface TraversalTimeCalculator extends Serializable {
      *
      * @return the expected value of the time in seconds to make the turn.
      */
-    public int turnTimeSeconds (int fromEdge, int toEdge, StreetMode streetMode, CongestionLevel congestionLevel);
+    public int turnTimeSeconds (int fromEdge, int toEdge, StreetMode streetMode);
 
 
 }
