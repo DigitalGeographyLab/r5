@@ -19,7 +19,7 @@ public class LaDotBikeCostSupplier implements SingleModeTraversalTimes.Supplier 
     public double perceivedLengthMultipler () {
         // disable all of these extra evaluations, since we have edge-level traversal speeds
         return 1;
-
+        /*
         // Original formula:
         // distance + distance * (bike_blvd_penalty + bike_path_penalty + slope_penalty + no_bike_penalty)
         // Start at unity
@@ -49,6 +49,7 @@ public class LaDotBikeCostSupplier implements SingleModeTraversalTimes.Supplier 
         factor += tags.slopePercent4to6 * 1.23;
         factor += tags.slopePercent6plus * 3.239;
         return factor;
+        */
     }
 
     @Override
