@@ -45,7 +45,7 @@ public class TimeDependentRoutingTest {
             }
 
             @Override
-            public int turnTimeSeconds (int fromEdge, int toEdge, StreetMode streetMode, CongestionLevel congestionLevel) {
+            public int turnTimeSeconds (int fromEdge, int toEdge, StreetMode streetMode) {
                 return 0;
             }
         };

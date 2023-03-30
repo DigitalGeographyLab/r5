@@ -39,7 +39,7 @@ public class EdgeTraversalTimes implements TraversalTimeCalculator {
     }
 
     @Override
-    public int turnTimeSeconds (int fromEdge, int toEdge, StreetMode streetMode, CongestionLevel congestionLevel) {
+    public int turnTimeSeconds (int fromEdge, int toEdge, StreetMode streetMode) {
         if (streetMode == StreetMode.WALK) {
             return walkTraversalTimes.turnTimeSeconds(fromEdge, toEdge);
         } else if (streetMode == StreetMode.BICYCLE) {
