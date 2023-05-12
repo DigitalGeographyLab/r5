@@ -39,19 +39,10 @@ jobs:
         java-version: 11
         distribution: temurin
         cache: 'gradle'
-    - name: Install gradle
-      uses: gradle/gradle-build-action@v2
-      with:
-        gradle-version: 7.6.1
-    - uses: actions/cache@v1
-      id: cache
-      with:
-        path: ~/.gradle/caches
-        key: gradle-caches
     - name: Show version string
       run: gradle -q printVersion | head -n1
     - name: Build and Test
-      run: gradle build 
+      run: gradle build
     - name: Ensure shadow JAR is runnable as local backend
       run: |
         cp analysis.properties.template analysis.properties
