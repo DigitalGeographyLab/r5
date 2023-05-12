@@ -642,6 +642,13 @@ public class EdgeStore implements Serializable {
             } else if (traverseStreetMode == StreetMode.CAR) {
                 // TODO: apply speed based on traffic information if switched on in the request
                 return getCarSpeedMetersPerSecond();
+            } else if (traverseStreetMode == StreetMode.BICYCLE) {
+                float bicycleSpeed = getBicycleSpeedMetersPerSecond();
+                if (bicycleSpeed > 0) {
+                    return getBicycleSpeedMetersPerSecond();
+                } else {
+                    return options.getSpeedForMode(traverseStreetMode);
+                }
             }
             return options.getSpeedForMode(traverseStreetMode);
         }
