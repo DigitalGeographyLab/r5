@@ -729,13 +729,15 @@ public class EdgeStore implements Serializable {
             // This was rounding up, now truncating ... maybe change back for consistency?
             // int roundedTime = (int) Math.ceil(time);
 
+            CongestionLevel congestionLevel = CongestionLevel.fromProfileRequest(req);
+
             int turnTimeSeconds = 0;
             // Negative backEdge means this state is not the result of traversing an edge (it's the start of a search).
             if (s0.backEdge >= 0) {
                 if (req.reverseSearch) {
-                    turnTimeSeconds = timeCalculator.turnTimeSeconds(getEdgeIndex(), s0.backEdge, streetMode);
+                    turnTimeSeconds = timeCalculator.turnTimeSeconds(getEdgeIndex(), s0.backEdge, streetMode, congestionLevel);
                 } else {
-                    turnTimeSeconds = timeCalculator.turnTimeSeconds(s0.backEdge, getEdgeIndex(), streetMode);
+                    turnTimeSeconds = timeCalculator.turnTimeSeconds(s0.backEdge, getEdgeIndex(), streetMode, congestionLevel);
                 }
             }
             // TODO add checks for negative increment values to these functions.
