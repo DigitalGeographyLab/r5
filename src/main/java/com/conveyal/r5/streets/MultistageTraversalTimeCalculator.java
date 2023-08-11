@@ -51,8 +51,8 @@ public class MultistageTraversalTimeCalculator implements TraversalTimeCalculato
     }
 
     @Override
-    public int turnTimeSeconds (int fromEdge, int toEdge, StreetMode streetMode, CongestionLevel congestionLevel) {
-        return base.turnTimeSeconds(fromEdge, toEdge, streetMode, congestionLevel);
+    public int turnTimeSeconds (int fromEdge, int toEdge, StreetMode streetMode) {
+        return base.turnTimeSeconds(fromEdge, toEdge, streetMode);
     }
 
 }

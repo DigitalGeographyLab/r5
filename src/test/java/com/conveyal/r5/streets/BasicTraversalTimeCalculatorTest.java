@@ -43,7 +43,7 @@ public class BasicTraversalTimeCalculatorTest extends TurnTest {
     public void testCost () throws Exception {
         setUp(false);
         BasicTraversalTimeCalculator calculator = new BasicTraversalTimeCalculator(streetLayer, true);
-        assertEquals(calculator.LEFT_TURN, calculator.turnTimeSeconds(ee + 1, es, StreetMode.CAR, CongestionLevel.OFF_PEAK));
+        assertEquals(calculator.LEFT_TURN, calculator.turnTimeSeconds(ee + 1, es, StreetMode.CAR));
     }
 
     /**
