@@ -3,6 +3,7 @@ package com.conveyal.r5;
 import java.util.List;
 
 import com.conveyal.r5.analyst.AccessibilityResult;
+import com.conveyal.r5.analyst.TemporalDensityResult;
 import com.conveyal.r5.analyst.cluster.PathResult;
 import com.conveyal.r5.analyst.cluster.TravelTimeResult;
 
@@ -22,19 +23,33 @@ public class OneOriginResult {
 
     public final PathResult paths;
 
+    public final TemporalDensityResult density;
+
     /* GP2 edit: add this attribute to save OsmIdResults */
     public final List<List<Long>> osmIdResults;
 
-    /* GP2 edit: add default null OsmIdResults */  
-    public OneOriginResult(TravelTimeResult travelTimes, AccessibilityResult accessibility, PathResult paths) {
-        this(travelTimes, accessibility, paths, null);
+    /* GP2 edit: add overloaded constructor with default null OsmIdResults */  
+    public OneOriginResult(
+            TravelTimeResult travelTimes,
+            AccessibilityResult accessibility,
+            PathResult paths,
+            TemporalDensityResult density
+    ) {
+        this(travelTimes, accessibility, paths, density, null);
     }
 
-    /* GP2 edit: add this overload constructor to handle optional osmIdResults  */
-    public OneOriginResult(TravelTimeResult travelTimes, AccessibilityResult accessibility, PathResult paths, List<List<Long>> osmIdResults) {
+    /* GP2 edit: add this constructor to handle optional osmIdResults  */
+    public OneOriginResult(
+            TravelTimeResult travelTimes,
+            AccessibilityResult accessibility,
+            PathResult paths,
+            TemporalDensityResult density,
+            List<List<Long>> osmIdResults
+    ) {
         this.travelTimes = travelTimes;
         this.accessibility = accessibility;
         this.paths = paths;
+        this.density = density;
         this.osmIdResults = osmIdResults;
     }
 
