@@ -115,7 +115,6 @@ public class CustomCostTest {
         AnalysisWorkerTask task = gridLayout.newTaskBuilder()
                 .setOrigin(2, 2)
                 .singleFreeformDestination(5, 3)
-                .uniformOpportunityDensity(2)
                 .monteCarloDraws(1)
                 .build();
 
@@ -279,7 +278,6 @@ public class CustomCostTest {
         AnalysisWorkerTask task = gridLayout.newTaskBuilder()
                 .setOrigin(2, 2)
                 .singleFreeformDestination(5, 3)
-                .uniformOpportunityDensity(2)
                 .monteCarloDraws(1)
                 .build();
 
