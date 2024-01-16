@@ -114,9 +114,9 @@ public class CustomCostTest {
         // build the task from the grid, example taken from SimpsonDesertTests.java
         AnalysisWorkerTask task = gridLayout.newTaskBuilder()
                 .setOrigin(2, 2)
-                .singleFreeformDestination(5, 3)
-                .monteCarloDraws(1)
-                .build();
+                .singleFreeformDestination(5, 3);
+                //.monteCarloDraws(1)
+                //.build();
 
         List<CustomCostField> customCostFieldsList = Network.streetLayer.edgeStore.costFields.stream()
             .map(CustomCostField.class::cast)
@@ -277,9 +277,9 @@ public class CustomCostTest {
         // build the task from the grid, example taken from SimpsonDesertTests.java
         AnalysisWorkerTask task = gridLayout.newTaskBuilder()
                 .setOrigin(2, 2)
-                .singleFreeformDestination(5, 3)
-                .monteCarloDraws(1)
-                .build();
+                .singleFreeformDestination(5, 3);
+                //.monteCarloDraws(1)
+                //.build();
 
         TravelTimeComputer computer = new TravelTimeComputer(task, Network);
 
