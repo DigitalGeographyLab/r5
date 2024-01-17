@@ -104,23 +104,29 @@ public class CustomCostTest {
             // add just a small increate in traveltime for not 
             // making the vertices unreachable
             customCostHashMap.put(osmId, 0.25);
+            System.out.println(osmId);
         }
+
+        System.out.println(customCostHashMap);
 
         // add the hashmap as the customCostHashMap to the customCostInstance
         CustomCostField customCostInstance = new CustomCostField("testKey", 2, customCostHashMap, allowNullCustomCostEdges);
         Network.streetLayer.edgeStore.costFields = CustomCostField.wrapToEdgeStoreCostFieldsList(customCostInstance);
 
+        System.out.println(Network.streetLayer.edgeStore.costFields);
 
         // build the task from the grid, example taken from SimpsonDesertTests.java
         AnalysisWorkerTask task = gridLayout.newTaskBuilder()
                 .setOrigin(2, 2)
                 .singleFreeformDestination(5, 3)
-                //.monteCarloDraws(1)
+                .monteCarloDraws(1)
                 .build();
 
         List<CustomCostField> customCostFieldsList = Network.streetLayer.edgeStore.costFields.stream()
             .map(CustomCostField.class::cast)
             .collect(Collectors.toList());
+
+        System.out.println(customCostFieldsList);
 
         assertTrue(customCostFieldsList.size() > 0);
 
@@ -132,6 +138,7 @@ public class CustomCostTest {
         TravelTimeComputer computer = new TravelTimeComputer(task, Network);
         OneOriginResult oneOriginResult = computer.computeTravelTimes();
 
+        System.out.println(oneOriginResult.osmIdResults);
 
         assert(oneOriginResult != null);
         assertTrue(oneOriginResult.osmIdResults.size() > 0);
@@ -278,7 +285,7 @@ public class CustomCostTest {
         AnalysisWorkerTask task = gridLayout.newTaskBuilder()
                 .setOrigin(2, 2)
                 .singleFreeformDestination(5, 3)
-                //.monteCarloDraws(1)
+                .monteCarloDraws(1)
                 .build();
 
         TravelTimeComputer computer = new TravelTimeComputer(task, Network);

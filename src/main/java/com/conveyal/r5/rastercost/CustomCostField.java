@@ -177,6 +177,9 @@ public class CustomCostField implements CostField, Serializable {
         // save the custom cost addition costs
         customCostAdditionalTraveltimes.put(keyOsmId, roundedAdditionalCostSeconds);
         // value is rounded and casted to int for seconds
+
+        System.out.println(additionalCostSeconds);
+
         return roundedAdditionalCostSeconds;
     }
 
