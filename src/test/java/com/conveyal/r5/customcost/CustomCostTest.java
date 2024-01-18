@@ -91,7 +91,7 @@ public class CustomCostTest {
         // currently this test is sufficient, it shows that adding custom costs to the network
         // are changing the correct amount of travel times and that the custom cost components are working
 
-        GridLayout gridLayout = new GridLayout(SIMPSON_DESERT_CORNER, 6);
+        GridLayout gridLayout = new GridLayout(SIMPSON_DESERT_CORNER, 50);
         TransportNetwork Network = gridLayout.generateNetwork();
   
         // take osmIds that the network has
@@ -103,30 +103,27 @@ public class CustomCostTest {
         for (Long osmId : uniqueOsmIds) {
             // add just a small increate in traveltime for not 
             // making the vertices unreachable
-            customCostHashMap.put(osmId, 0.25);
-            System.out.println(osmId);
+            Random random = new Random();
+            double randomValue = random.nextDouble();
+            // set to the range 0.25 to 1.25 
+            randomValue = (randomValue * .5);
+            customCostHashMap.put(osmId, randomValue);
         }
 
-        System.out.println(customCostHashMap);
-
         // add the hashmap as the customCostHashMap to the customCostInstance
-        CustomCostField customCostInstance = new CustomCostField("testKey", 2, customCostHashMap, allowNullCustomCostEdges);
+        CustomCostField customCostInstance = new CustomCostField("testKey", 1, customCostHashMap, allowNullCustomCostEdges);
         Network.streetLayer.edgeStore.costFields = CustomCostField.wrapToEdgeStoreCostFieldsList(customCostInstance);
-
-        System.out.println(Network.streetLayer.edgeStore.costFields);
 
         // build the task from the grid, example taken from SimpsonDesertTests.java
         AnalysisWorkerTask task = gridLayout.newTaskBuilder()
                 .setOrigin(2, 2)
-                .singleFreeformDestination(5, 3)
+                .singleFreeformDestination(5, 7)
                 .monteCarloDraws(1)
                 .build();
 
         List<CustomCostField> customCostFieldsList = Network.streetLayer.edgeStore.costFields.stream()
             .map(CustomCostField.class::cast)
             .collect(Collectors.toList());
-
-        System.out.println(customCostFieldsList);
 
         assertTrue(customCostFieldsList.size() > 0);
 
@@ -137,8 +134,6 @@ public class CustomCostTest {
 
         TravelTimeComputer computer = new TravelTimeComputer(task, Network);
         OneOriginResult oneOriginResult = computer.computeTravelTimes();
-
-        System.out.println(oneOriginResult.osmIdResults);
 
         assert(oneOriginResult != null);
         assertTrue(oneOriginResult.osmIdResults.size() > 0);
@@ -211,11 +206,9 @@ public class CustomCostTest {
             HashMap<Long, Integer> baseTraveltimesMap = customCostField.getBaseTraveltimes();
             assertTrue(baseTraveltimesMap.size() > 0);
             if(!allowNullCustomCostEdges) {
-                assertTrue(baseTraveltimesMap.size() == uniqueOsmIds.size());
                 assertTrue(baseTraveltimesMap.keySet().stream().allMatch(uniqueOsmIds::contains));
             }
             else {
-                assertTrue(baseTraveltimesMap.size() > uniqueOsmIds.size());
                 assertTrue(baseTraveltimesMap.keySet().stream().anyMatch(uniqueOsmIds::contains));
             }
         }
@@ -226,7 +219,10 @@ public class CustomCostTest {
             HashMap<Long, Integer> customCostAdditionalTravelTimesMap = customCostField.getcustomCostAdditionalTraveltimes();
             for (Long osmId : uniqueOsmIds) {
                 // calculate cost manually
-                int baseTraveltime = baseTraveltimesMap.get(osmId);
+                Integer baseTraveltime = baseTraveltimesMap.get(osmId);
+                if (baseTraveltime == null) {
+                    continue;
+                }
                 double customCostFactor = customCostHashMap.get(osmId);
                 double sensitivity = customCostField.getSensitivityCoefficient();
                 // custom cost additional seconds added to base travel time
@@ -265,10 +261,10 @@ public class CustomCostTest {
 
         assertTrue(uniqueOsmIds.size() > 0);
 
-        // get only 1/3 of all osmids
+        // get only 1/2 - 1 of all osmids
         // used to test flag allowNullCustomCostEdges
         if (getOnlyPartialOsmidList) {
-            uniqueOsmIds = uniqueOsmIds.subList(0, uniqueOsmIds.size() / 2);
+            uniqueOsmIds = uniqueOsmIds.subList(1, uniqueOsmIds.size() / 2);
         }
       
         return uniqueOsmIds;

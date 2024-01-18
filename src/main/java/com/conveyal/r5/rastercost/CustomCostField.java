@@ -140,25 +140,16 @@ public class CustomCostField implements CostField, Serializable {
         // save the base traversal seconds
         baseTraveltimes.put(keyOsmId, baseTraversalTimeSeconds);
         // get custom cost factor using the osmId as key
+        // will be null if not found
         Object customCostValue = this.customCostFactors.get(keyOsmId);
-        // if custom cost not found and flag for allowing null/not found costs is set
-        if (customCostValue == null && this.allowNullCustomCostEdges) {
-            // setting to 0 for no effect, also will prevent from going to exception due to not null
-            customCostValue = 0.0;
-        }
         // if customCostValue from HashMap was null and flag allowNullcustomCostEdges is false
-        if (customCostValue == null) {
-            throw new CustomCostFieldException("Custom cost not found for edge with osmId: " + currentEdge.getOSMID());
+        if (customCostValue == null && !this.allowNullCustomCostEdges) {
+            throw new CustomCostFieldException("Custom cost not found for edge with osmId: " + currentEdge.getOSMID() + ". If some null values are expected, set allowNullCustomCostEdges to true");
         }
-
-        Double additionalCostSeconds;
-        // if customCostValue is 0.0, or was set to 0.0 because was null and flag allowNullCustomCostEdges is true
-        // skip calculating the additional custom cost time and fallback to 0.0
-        if (customCostValue.equals(0.0)) {
-            additionalCostSeconds = 0.0;
-        }
-        // calculate the additionalCostSeconds for edge where customCostValue is found
-        else {
+        // set additionalCostSeconds to 0.0 as default
+        Double additionalCostSeconds = 0.0;
+        // calculate the additionalCostSeconds for edge if customCostValue is found
+        if (customCostValue != null) {
             // cast to Double if needed
             Double customCostFactor;
             if (customCostValue instanceof Integer) {
@@ -173,12 +164,10 @@ public class CustomCostField implements CostField, Serializable {
             // this value is then added to the base traversal time
             additionalCostSeconds = baseTraversalTimeSeconds * customCostFactor * this.sensitivityCoefficient;
         }
+        // round the additionalCostSeconds to int
         int roundedAdditionalCostSeconds = (int) Math.round(additionalCostSeconds);
         // save the custom cost addition costs
         customCostAdditionalTraveltimes.put(keyOsmId, roundedAdditionalCostSeconds);
-        // value is rounded and casted to int for seconds
-
-        System.out.println(additionalCostSeconds);
 
         return roundedAdditionalCostSeconds;
     }
