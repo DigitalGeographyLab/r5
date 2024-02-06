@@ -17,11 +17,15 @@ import com.conveyal.r5.streets.StreetRouter;
 import com.conveyal.r5.transit.TransportNetwork;
 
 /**
- * CustomCost helper for Greenpaths2 custom cost bi-objective routing
+ * CustomCost helper for Greenpaths2 custom cost multi-objective routing
  * create a separate class for modularity and transparency
  * and distinguishing the custom cost logic from the rest of the base code
  * 
  * Also this separate class can be helpful if we want to defreeze the R5 version
+ * 
+ * note: for further development geometries could also be fethed from the router state, but it is not implemented yet
+ * would need refactoring e.g. getting edgeIndex list separately, renamings, new method for getting geometries
+ * flag for if should get geometries or not in the calling method. Dont forget tests.
  *
  * Created by roope on 11.10.2023.
  */
@@ -74,19 +78,17 @@ public class CustomCost {
                 edgeOsmIdsForPath.add(edge.getOSMID());
             }
             // remove dublicate osmIds
+            // the router splits the osm ways into node-node segments, so the same osmId can be found multiple times
+            // because all child segments have the original parent osmId
+            // this all happens because osm ways natively can and most likely will extend over multiple nodes
             List<Long> uniqueEdgeOsmIdsForPath = edgeOsmIdsForPath.stream().distinct().collect(Collectors.toList());
             // replace the empty populated list with the unique list if any osmids are found
             if (!uniqueEdgeOsmIdsForPath.isEmpty()) {
                 osmIdResults.set(i, uniqueEdgeOsmIdsForPath);
             }
         }
-        // check if all lists are empty i.e. nothing was added
-        // if all empty, return null
-        if (osmIdResults.stream().allMatch(List::isEmpty)) {
-            LOG.info("No OsmId's were found for any of the points");
-            return null;
-          }
-
+        // TODO: is returning empty lists sufficient? or should we return null?
+        // note that returning null and yielding error will crash the routing
         return osmIdResults;
     }
 }
