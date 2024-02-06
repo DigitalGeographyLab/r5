@@ -1,22 +1,40 @@
-# Conveyal R5 Routing Engine Greenpaths2 edit
+# Greenpaths2 patch: Conveyal R5 Patched Routing Engine
 
-## Greenpaths2: bi-objective custom cost exposure routing
-This project has made changes to the source forked r5 and implemented support for custom cost based bi-objective (exposure) routing which is used in Greenpaths2 -tool. The tool is part of projects: GREENTRAVEL, Urban airquality 2.0 and Roope Heinonen's masters thesis (University of Helsinki, Geography).
+## Digital Geography Github
+DO NOT MERGE THIS BRANCH TO MAIN/DEV. Green Paths multi-objective routing patches should only be in gp2 branch.
+
+## Greenpaths2: multi-objective custom cost exposure routing
+This project has made changes to the source forked r5 and implemented support for custom cost based multi-objective (exposure) routing which is used in Greenpaths2 -tool. The tool is part of projects: GREENTRAVEL, Urban airquality 2.0 and Roope Heinonen's masters thesis (University of Helsinki, Geography).
 
 ### Brief overview of Greenpaths2's -tool
-R5 is used for its superior routing efficiency, existing infrastructure for custom costs and previous knowledge and implementation of Python wrapper [r5py](https://github.com/r5py/r5py). Greenpaths2 uses the r5 via r5py, which is a tool written in Python which accesses Java using JPype. All the other processes e.g. calculating the custom costs per edge should be done in Python, so the r5 adresses only the heavy lifting for the routing and r5py works as the interface in Python for accessing r5. R5py, as r5, also has most of the infrastructure in place for implementing the bi-objective custom cost routing, but some minor changes are needed in order to be able to utilize this customized version of r5.
+In Green paths 2 tool R5 is used for its superior routing efficiency, existing java code infrastructure for using and implementing custom costs (see MultistageTraversalTimeCalculator and EdgeStore.costFields). Also existing python wrapper [r5py](https://github.com/r5py/r5py) written by Chris Fink et.al., is used in GP2 architecture. R5py uses JPype to access R5 java modules, creating a Python interface for R5.
 
-The preprocessing i.e. calculating the actual custom costs per OsmId and the analyses i.e. producing the exposure statistics for routes for scientific and more general public GUI are calculated in the navite Greenpaths2 logic.
+GP2 tool has also other modules which are written in Python. 
+
+#### GP2 workflow overview
+
+1. OSM network (osm.pbf) is introduced and separated to segments.
+2. Exposure datas are introduced, all datas e.g. vectors, points are transformed to rasters.
+3. Each segment in the osm.pbf is assigned exposure value (used later for defining exposure quantities) and a NORMALIZED exposure index. The index is used in the routing for adding weights to edges. 
+4. Exposure Dictionary is created where key=osmid (unique segment id created in 1.) value=exposureIndexFactor. This dictionary is then added to CustomCostField (gp2 patch) which are then injected to EdgeStore.costFields and used in routing calculations. Multiple costs can be used, all will be used simultaneously for each edge weight. Note: adding "weights" is actually adding seconds to the travelTime so the travelTimes are actually travelCosts. To get traveltimes without added times (or the added times) see CustomCostField.
+5. R5py uses R5 to route and returns list of edge/segment osmids for each path.
+6. The osmids are then used to collect exposure data from the exposure dictionary using osmids as keys.
+
 
 So the general architecture's tlds;
 1) modified r5 java code which has support for custom costs and getting OsmId's for exposure purposes
 2) modified r5py which has support for the r5 changes and other Greenpaths2 needs
 3) Greenpaths preprocessing module which produces the X custom costs per edge and handles input datas
 4) analysis module which then calculates and processes the results derived from r5py
+5) possible API and browser GUI (route planner)
 
 ### Details on the implementation
 
-The custom cost functionality is created by both, using the existing infrastructure already found in r5 and introducing new classes which are increasing the base capabilities. Most of the major changes can be found from the codebase using comment "GP2 edit:" as the key search condition. The implementations can be split in to two main categories: class and logic. The classes are newly created and they serve as the containers for the needed components and their logic for the bi-objective custom cost implementation. The logic changes are generally speaking the implementation of these classes and their methods withing the r5 base source code. Here they are by file (ordered by: category, alphabetical order):
+The custom cost functionality is created by both, using the existing infrastructure already found in r5 and introducing new classes which are increasing the base capabilities.
+
+Most of the major changes can be found from the codebase using comment "GP2 edit:" as the key search condition. The implementations can be split in to two main categories: class and logic. 
+
+The classes are newly created and they serve as the containers for the needed components and their logic for the multi-objective custom cost implementation. The logic changes are generally speaking the implementation of these classes and their methods withing the r5 base source code. Here they are by file (ordered by: category, alphabetical order):
 
 ## CLASS 
 
@@ -24,7 +42,7 @@ The custom cost functionality is created by both, using the existing infrastruct
 Used to isolate custom cost related logic in its own class. Currently has functionality for enabling OsmId fetching from TravelTimeComputer (without public transport) router state i.e. per OD (origin-destination) point pair goes through each edge, yields a list of all OsmIds traversed in the OD-path.
 
 ### CustomCostField.java
-Utilizes existing infrastructure: CostField Interface, which is already used in custom costs e.g. Elevation and Sun -costs. The most important method is "additionalTraversalTimeSeconds" which is used in the MultistageTraversalTimeCalculator's traversalTimeSeconds which is used to calculate the traversal times per edge. This classes "additionalTraversalTimeSeconds" implements general custom additional cost functionality which can be flexibly used in the bi-objective routing.
+Utilizes existing infrastructure: CostField Interface, which is already used in custom costs e.g. Elevation and Sun -costs. The most important method is "additionalTraversalTimeSeconds" which is used in the MultistageTraversalTimeCalculator's traversalTimeSeconds which is used to calculate the traversal times per edge. This classes "additionalTraversalTimeSeconds" implements general custom additional cost functionality which can be flexibly used in the multi-objective routing.
  
 ### CustomCostTest.java
 As the name implies, this file has the tests for the custom cost related components.
@@ -50,8 +68,10 @@ Assigns a edgeOsmId for the StreetEdgeInfo instances during the creation and pop
 ### StreetSegmentTest.java
 Tests for getting the osmId. Uses .json dummy data where the edgeOsmId's are also added. 
 
+# Greenpaths2 patch: end.
 
-# Conveyal R5 Routing Engine
+
+# Original: Conveyal R5 Routing Engine
 
 
 ## R5: Rapid Realistic Routing on Real-world and Reimagined networks
