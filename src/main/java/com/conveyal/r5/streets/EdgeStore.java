@@ -345,10 +345,14 @@ public class EdgeStore implements Serializable {
         // The caller supplies an OSM ID less than 0 to indicate that the edges being created are not derived
         // from any OSM way. A unique negative OSM ID is generated.
         // By convention, OSM IDs less than 0 represent ways not in the main public OSM database.
-        if (osmID < 0) {
-            osmID = -generatedOSMID;
-            generatedOSMID++;
-        }
+
+        // Green Paths 2: 
+        /* GP2 edit: comment this out because we are using the actual osm ids from tag 'gp2_osm_id' */  
+
+        // if (osmID < 0) {
+        //     osmID = -generatedOSMID;
+        //     generatedOSMID++;
+        // }
 
         if (beginVertexIndex < 0 || beginVertexIndex >= vertexStore.getVertexCount()) {
             throw new IllegalArgumentException(String.format("Attempt to begin edge pair at nonexistent vertex %s", beginVertexIndex));

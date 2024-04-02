@@ -317,7 +317,19 @@ public class StreetLayer implements Serializable, Cloneable {
                 final boolean intersection = osm.intersectionNodes.contains(way.nodes[n]);
                 final boolean lastNode = (n == (way.nodes.length - 1));
                 if (intersection || lastNode || isImpassable(node)) {
-                    makeEdgePair(way, beginIdx, n, entry.getKey());
+                    // Green Paths 2: add the real osm_id to the edge
+                    // we are adding the "osm_id" as a tag for the osm.pbf / ways
+                    // using tags for there's already infrastructure in place for tags
+                    Boolean hasOsmIdTag = way.hasTag("gp2_osm_id");
+                    if (!hasOsmIdTag) {
+                        makeEdgePair(way, beginIdx, n, entry.getKey());
+                    } else {
+                        String osmIdString = way.getTag("gp2_osm_id");
+                        // Convert the String to a Long
+                        Long osmIdLong = Long.parseLong(osmIdString);
+                        makeEdgePair(way, beginIdx, n, osmIdLong);
+
+                    }
                     beginIdx = n;
                 }
             }
