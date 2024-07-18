@@ -301,10 +301,22 @@ public class StreetRouter {
             // TODO either: 1) don't hardwire drive-on-right, or 2) global https://en.wikipedia.org/wiki/Dagen_H
             this.timeCalculator = new BasicTraversalTimeCalculator(streetLayer, true);
         }
-        // If any additional costs such as hills or sun are defined, add them on to the base traversal times.
+        // GP2 edit: use either precalculations or calculate custom costs for edges during routing
         if (notNullOrEmpty(streetLayer.edgeStore.costFields)) {
-            this.timeCalculator = new MultistageTraversalTimeCalculator(this.timeCalculator, streetLayer.edgeStore.costFields);
-        }
+             // check if we have custom costs and have set the static speed, then use this pre-calculator as the time calculator
+            if (streetLayer.edgeStore.edgeCustomCostPreCalculator != null && 
+                notNullOrEmpty(streetLayer.edgeStore.edgeCustomCostPreCalculator.getPreCalculatedEdgeTravelTimesWithCustomCosts())
+            ){
+                // user pre-calculated costs
+                this.timeCalculator = streetLayer.edgeStore.edgeCustomCostPreCalculator;
+            }
+            // if no pre-calculated costs are available, use MultistageTraversalTimeCalculator as the time calculator
+            // it calculates during routing so is slower when using custom costs
+            else if (streetLayer.edgeStore.edgeCustomCostPreCalculator == null ) {
+                // calculate custom costs during routing
+                this.timeCalculator = new MultistageTraversalTimeCalculator(this.timeCalculator, streetLayer.edgeStore.costFields);
+            }
+        }       
     }
 
 

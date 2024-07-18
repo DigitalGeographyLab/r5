@@ -19,6 +19,7 @@ import com.conveyal.r5.labeling.TypeOfEdgeLabeler;
 import com.conveyal.r5.labeling.USTraversalPermissionLabeler;
 import com.conveyal.r5.point_to_point.builder.SpeedConfig;
 import com.conveyal.r5.profile.StreetMode;
+import com.conveyal.r5.rastercost.EdgeCustomCostPreCalculator;
 import com.conveyal.r5.streets.EdgeStore.Edge;
 import com.conveyal.r5.transit.TransitLayer;
 import com.conveyal.r5.transit.TransportNetwork;
@@ -54,6 +55,7 @@ import java.util.stream.LongStream;
 
 import static com.conveyal.r5.analyst.scenario.PickupWaitTimes.NO_WAIT_ALL_STOPS;
 import static com.conveyal.r5.common.GeometryUtils.checkWgsEnvelopeSize;
+import static com.conveyal.r5.common.Util.notNullOrEmpty;
 import static com.conveyal.r5.streets.VertexStore.VertexFlag.IMPASSABLE;
 import static com.conveyal.r5.streets.VertexStore.VertexFlag.TRAFFIC_SIGNAL;
 
@@ -196,6 +198,13 @@ public class StreetLayer implements Serializable, Cloneable {
      * Note that this is a single field, rather than a collection: we only support one set of polygons for one mode.
      */
     public PickupWaitTimes pickupWaitTimes;
+
+
+    // GP2 edit: added static speed for custom cost routing precalculating the cost traversal times
+    // This is a static speed for custom cost routing, it is used to precalculate the cost traversal times
+    // GP2 supports only single travel mode (walking, bicycle) so we can use this single speed for all travel modes
+    // this also works as a trigger for making the precalculations if the staticSpeedKmh is set to a value > 0
+    public float staticSpeedKmh = 0;
 
     public static final EnumSet<EdgeStore.EdgeFlag> ALL_PERMISSIONS = EnumSet
         .of(EdgeStore.EdgeFlag.ALLOWS_BIKE, EdgeStore.EdgeFlag.ALLOWS_CAR,
@@ -412,6 +421,15 @@ public class StreetLayer implements Serializable, Cloneable {
 
         checkWgsEnvelopeSize(envelope, "street layer");
         osm = null;
+        
+        // GP2 edit: do and add precalculations of edge custom costs if the staticSpeedKmh is set
+        if (notNullOrEmpty(edgeStore.costFields) && this.staticSpeedKmh > 0) {
+            LOG.info("Pre-calculating custom cost traversal times for edges.");
+            EdgeCustomCostPreCalculator edgeCustomCostPreCalculator = new EdgeCustomCostPreCalculator(this);
+            edgeCustomCostPreCalculator.calculateCustomCostTraversalTimes();
+            // set the precalculated custom cost traversal times to the edgeStore
+            edgeStore.edgeCustomCostPreCalculator = edgeCustomCostPreCalculator;
+        }
     }
 
     private boolean isParkAndRide (OSMEntity entity) {

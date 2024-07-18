@@ -83,6 +83,8 @@ public class CustomCostField implements CostField, Serializable {
      * 
      * Key is osmId, value is addition custom cost time as costs (seconds)
      */
+
+    // currently not used in GP2, but could be used for debugging or analysis
     private HashMap<Long, Integer> customCostAdditionalTraveltimes = new HashMap<Long, Integer>();
 
 
@@ -138,7 +140,10 @@ public class CustomCostField implements CostField, Serializable {
         // get the custom cost factor from the custom cost map using the edgeas osmId as key
         Long keyOsmId = Long.valueOf(edgeOsmId);
         // save the base traversal seconds
-        baseTraveltimes.put(keyOsmId, baseTraversalTimeSeconds);
+        if (!baseTraveltimes.containsKey(keyOsmId)) {
+            baseTraveltimes.put(keyOsmId, baseTraversalTimeSeconds);
+        }
+        
         // get custom cost factor using the osmId as key
         // will be null if not found
         Object customCostValue = this.customCostFactors.get(keyOsmId);

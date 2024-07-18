@@ -7,6 +7,7 @@ import com.conveyal.r5.labeling.StreetClass;
 import com.conveyal.r5.profile.ProfileRequest;
 import com.conveyal.r5.profile.StreetMode;
 import com.conveyal.r5.rastercost.CostField;
+import com.conveyal.r5.rastercost.EdgeCustomCostPreCalculator;
 import com.conveyal.r5.trove.AugmentedList;
 import com.conveyal.r5.trove.TByteAugmentedList;
 import com.conveyal.r5.trove.TIntAugmentedList;
@@ -187,6 +188,12 @@ public class EdgeStore implements Serializable {
      * For now this may be null, indicating that no per-edge times are available and default values should be used.
      */
     public EdgeTraversalTimes edgeTraversalTimes;
+
+    // GP2 edit: add custom cost pre-calculator to EdgeStore
+    // used as this.timeCalculator in StreetRouter route()
+    // custom costs are pre-calculated and stored in PreCalculatedEdgeTravelTimesWithCustomCosts map
+    // which are then called in traversalTimeSeconds() method to speed up the routing
+    public EdgeCustomCostPreCalculator edgeCustomCostPreCalculator;
 
     /**
      * Holds zero or more sets of data, typically derived from rasters, which represent scalar or boolean fields through
