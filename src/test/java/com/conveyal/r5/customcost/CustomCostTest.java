@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class CustomCostTest {
     private static final Logger LOG = LoggerFactory.getLogger(ReverseRoutingTest.class);
 
-    HashMap<Long, Double> staticCustomCostHashMap;
+    HashMap<Integer, Double> staticCustomCostHashMap;
 
     @BeforeEach
     public void setUp () throws Exception {
@@ -45,13 +45,13 @@ public class CustomCostTest {
     }
 
     // this is used in places where no customised cost map is needed
-    public static HashMap<Long, Double> generateCustomCostHashMap() {
-        HashMap<Long, Double> osmIdMap = new HashMap<>();
+    public static HashMap<Integer, Double> generateCustomCostHashMap() {
+        HashMap<Integer, Double> osmIdMap = new HashMap<>();
         // put a known value as the first in the hashmap
-        osmIdMap.put(123123L, 7.0);
+        osmIdMap.put(123123, 7.0);
         Random rand = new Random();
         for (int i = 0; i < 10; i++) {
-            long osmId = i;
+            int osmId = i;
             double randomValue = rand.nextDouble();
 
             osmIdMap.put(osmId, randomValue);
@@ -63,7 +63,7 @@ public class CustomCostTest {
     @Test
     public void testCreateValidCustomCostField () {
         CustomCostField customCostInstance = new CustomCostField("testKey", 3, staticCustomCostHashMap, false);
-        double targetValue = staticCustomCostHashMap.get(123123L);
+        double targetValue = staticCustomCostHashMap.get(123123);
         assertEquals(customCostInstance.getDisplayKey(), "testKey");
         assertEquals(targetValue, 7.0);
         assertEquals(staticCustomCostHashMap.size() > 0, true);
@@ -71,7 +71,7 @@ public class CustomCostTest {
 
     @Test
     public void testCreateInvalidCustomCostField () {
-        HashMap<Long, Double> emptyHashmap = new HashMap<>();
+        HashMap<Integer, Double> emptyHashmap = new HashMap<>();
         // assertThrows(IllegalArgumentException.class, );
         assertThrows(IllegalArgumentException.class, () -> new CustomCostField("testKey", 3, emptyHashmap, false));
         assertThrows(IllegalArgumentException.class, () -> new CustomCostField("testKey", 3, null, false));
@@ -97,10 +97,10 @@ public class CustomCostTest {
         // take osmIds that the network has
         // if allowNullCustomCostEdges is true, take only 1/2 of osids for testing missing osmids
         // add them to a list and make sure that they exist
-        List<Long> uniqueOsmIds = getOsmIds(Network, allowNullCustomCostEdges);
-        HashMap<Long, Double> customCostHashMap = new HashMap<>();
+        List<Integer> uniqueOsmIds = getOsmIds(Network, allowNullCustomCostEdges);
+        HashMap<Integer, Double> customCostHashMap = new HashMap<>();
         // add the acquired osmIds to a hashmap with random values
-        for (Long osmId : uniqueOsmIds) {
+        for (Integer osmId : uniqueOsmIds) {
             // add just a small increate in traveltime for not 
             // making the vertices unreachable
             Random random = new Random();
@@ -203,7 +203,7 @@ public class CustomCostTest {
         // and uniqueOsmIds size is the same and all the osmIds are found from the map
         // for they are were traversed so they should be present
         for (CustomCostField customCostField : customCostFieldsList) {
-            HashMap<Long, Integer> baseTraveltimesMap = customCostField.getBaseTraveltimes();
+            HashMap<Integer, Integer> baseTraveltimesMap = customCostField.getBaseTraveltimes();
             assertTrue(baseTraveltimesMap.size() > 0);
             if(!allowNullCustomCostEdges) {
                 assertTrue(baseTraveltimesMap.keySet().stream().allMatch(uniqueOsmIds::contains));
@@ -215,9 +215,9 @@ public class CustomCostTest {
 
         // check that the maps have correct values and that we get same values from the map and the manual calculation
         for (CustomCostField customCostField : customCostFieldsList) {
-            HashMap<Long, Integer> baseTraveltimesMap = customCostField.getBaseTraveltimes();
-            HashMap<Long, Integer> customCostAdditionalTravelTimesMap = customCostField.getcustomCostAdditionalTraveltimes();
-            for (Long osmId : uniqueOsmIds) {
+            HashMap<Integer, Integer> baseTraveltimesMap = customCostField.getBaseTraveltimes();
+            HashMap<Integer, Integer> customCostAdditionalTravelTimesMap = customCostField.getcustomCostAdditionalTraveltimes();
+            for (Integer osmId : uniqueOsmIds) {
                 // calculate cost manually
                 Integer baseTraveltime = baseTraveltimesMap.get(osmId);
                 if (baseTraveltime == null) {
@@ -250,14 +250,14 @@ public class CustomCostTest {
         );
     }
 
-    public List<Long> getOsmIds(TransportNetwork network, boolean getOnlyPartialOsmidList) {
-        List<Long> osmIds = new ArrayList<>();
+    public List<Integer> getOsmIds(TransportNetwork network, boolean getOnlyPartialOsmidList) {
+        List<Integer> osmIds = new ArrayList<>();
         EdgeStore.Edge e = network.streetLayer.edgeStore.getCursor(0);
         do {
             osmIds.add(e.getOSMID());
         } while (e.advance());
 
-        List<Long> uniqueOsmIds = osmIds.stream().distinct().collect(Collectors.toList());
+        List<Integer> uniqueOsmIds = osmIds.stream().distinct().collect(Collectors.toList());
 
         assertTrue(uniqueOsmIds.size() > 0);
 

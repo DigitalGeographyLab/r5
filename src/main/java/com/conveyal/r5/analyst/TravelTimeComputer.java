@@ -244,7 +244,7 @@ public class TravelTimeComputer {
             {
                 // only get osmids if the streetlayer has cost fields
                 if (network.streetLayer.edgeStore.costFields != null) {
-                    List<List<Long>> osmIdResults = CustomCost.getOsmIdsFromRouterState(nonTransitTravelTimesToDestinations, sr, network);
+                    List<List<Integer>> osmIdResults = CustomCost.getOsmIdsFromRouterState(nonTransitTravelTimesToDestinations, sr, network);
                     travelTimeReducer.setOsmIdsResult(osmIdResults);
                 }
             }

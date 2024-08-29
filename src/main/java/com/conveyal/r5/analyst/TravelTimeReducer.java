@@ -86,7 +86,7 @@ public class TravelTimeReducer {
      *  One inner list of osmIds for each path to destination
      */
     /* GP2 edit: add this attribute for osmIdsResult  */
-    private List<List<Long>> osmIdsResult;
+    private List<List<Integer>> osmIdsResult;
 
     /**
      * Reduce travel time values to requested summary outputs for each origin. The type of output (a single
@@ -342,7 +342,7 @@ public class TravelTimeReducer {
 
     /** setter for OsmIdResults  */
     /* GP2 edit: add this setter */
-    public void setOsmIdsResult(List<List<Long>> osmIdResult) {
+    public void setOsmIdsResult(List<List<Integer>> osmIdResult) {
         this.osmIdsResult = osmIdResult;
     }
 

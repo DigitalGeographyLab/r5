@@ -331,12 +331,12 @@ public class StreetLayer implements Serializable, Cloneable {
                     // using tags for there's already infrastructure in place for tags
                     Boolean hasOsmIdTag = way.hasTag("gp2_osm_id");
                     if (!hasOsmIdTag) {
-                        makeEdgePair(way, beginIdx, n, entry.getKey());
+                        makeEdgePair(way, beginIdx, n, Math.toIntExact(entry.getKey()));
                     } else {
                         String osmIdString = way.getTag("gp2_osm_id");
-                        // Convert the String to a Long
-                        Long osmIdLong = Long.parseLong(osmIdString);
-                        makeEdgePair(way, beginIdx, n, osmIdLong);
+                        // convert from string to int
+                        int osmIdInt = Integer.valueOf(osmIdString).intValue();
+                        makeEdgePair(way, beginIdx, n, osmIdInt);
 
                     }
                     beginIdx = n;
@@ -1155,7 +1155,7 @@ public class StreetLayer implements Serializable, Cloneable {
     /**
      * Make an edge for a sub-section of an OSM way, typically between two intersections or leading up to a dead end.
      */
-    private void makeEdgePair (Way way, int beginIdx, int endIdx, Long osmID) {
+    private void makeEdgePair (Way way, int beginIdx, int endIdx, int osmID) {
 
         long beginOsmNodeId = way.nodes[beginIdx];
         long endOsmNodeId = way.nodes[endIdx];

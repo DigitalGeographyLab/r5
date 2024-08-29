@@ -116,7 +116,7 @@ public class EdgeStore implements Serializable {
     public TIntList lengths_mm;
 
     /** OSM ids of edges. One entry for each edge pair. Should we really be serializing this much data on every edge? */
-    public TLongList osmids;
+    public TIntList osmids;
 
     /**
      * For each edge _pair_, the OSM highway class it was derived from. Integer codes are defined in the StreetClass
@@ -214,7 +214,7 @@ public class EdgeStore implements Serializable {
      * OSM database are negative.
      * FIXME it's weird to store a positive ID, increment it in a positive direction, but always negate it before using it.
      */
-    private long generatedOSMID = 1;
+    private int generatedOSMID = 1;
 
     public EdgeStore (VertexStore vertexStore, StreetLayer layer, int initialSize) {
         this.vertexStore = vertexStore;
@@ -230,7 +230,7 @@ public class EdgeStore implements Serializable {
         toVertices = new TIntArrayList(initialEdgePairs);
         geometries = new ArrayList<>(initialEdgePairs);
         lengths_mm = new TIntArrayList(initialEdgePairs);
-        osmids = new TLongArrayList(initialEdgePairs);
+        osmids = new TIntArrayList(initialEdgePairs);
         streetClasses = new TByteArrayList(initialEdgePairs);
         inAngles = new TByteArrayList(initialEdgePairs);
         outAngles = new TByteArrayList(initialEdgePairs);
@@ -346,7 +346,7 @@ public class EdgeStore implements Serializable {
      * This avoids having a tangle of different edge creator functions for different circumstances.
      * @return a cursor pointing to the forward edge in the pair, which always has an even index.
      */
-    public Edge addStreetPair(int beginVertexIndex, int endVertexIndex, int edgeLengthMillimeters, long osmID) {
+    public Edge addStreetPair(int beginVertexIndex, int endVertexIndex, int edgeLengthMillimeters, int osmID) {
         // The first new edge to be created will have an index equal to the number of existing edges.
         int forwardEdgeIndex = nEdges();
         // The caller supplies an OSM ID less than 0 to indicate that the edges being created are not derived
@@ -1205,7 +1205,7 @@ public class EdgeStore implements Serializable {
             }
         }
 
-        public long getOSMID() {
+        public int getOSMID() {
             return osmids.get(pairIndex);
         }
 
@@ -1337,7 +1337,7 @@ public class EdgeStore implements Serializable {
         copy.toVertices = new TIntAugmentedList(toVertices);
         copy.geometries = new AugmentedList<>(geometries);
         copy.lengths_mm = new TIntAugmentedList(lengths_mm);
-        copy.osmids = new TLongAugmentedList(this.osmids);
+        copy.osmids = new TIntAugmentedList(this.osmids);
         copy.streetClasses = new TByteAugmentedList(this.streetClasses);
         copy.temporarilyDeletedEdges = new TIntHashSet();
         copy.inAngles = new TByteAugmentedList(inAngles);

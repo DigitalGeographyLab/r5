@@ -64,7 +64,7 @@
 	"bikeRentalOffStation": null
 	}, {
 	"edgeId": 335272,
-	"edgeOsmId": 312423154,
+	"edgeOsmId": 312423,
 	"distance": 19889,
 	"geometry": "LINESTRING (15.6280353 46.5632386, 15.6279759 46.5632395, 15.6279205 46.5632293, 15.6278615 46.5632034, 15.6278169 46.5631632)",
 	"mode": "CAR",
@@ -79,7 +79,7 @@
 	"bikeRentalOffStation": null
 	}, {
 	"edgeId": 16649,
-	"edgeOsmId": 14513451435,
+	"edgeOsmId": 145134,
 	"distance": 13549,
 	"geometry": "LINESTRING (15.6278169 46.5631632, 15.6276531 46.5632098)",
 	"mode": "CAR",
@@ -94,7 +94,7 @@
 	"bikeRentalOffStation": null
 	}, {
 	"edgeId": 16647,
-	"edgeOsmId": 67896789669,
+	"edgeOsmId": 67896,
 	"distance": 32505,
 	"geometry": "LINESTRING (15.6276531 46.5632098, 15.6272726 46.5633407)",
 	"mode": "CAR",
@@ -109,7 +109,7 @@
 	"bikeRentalOffStation": null
 	}, {
 	"edgeId": 168035,
-	"edgeOsmId": 7688908907,
+	"edgeOsmId": 76889,
 	"distance": 5237,
 	"geometry": "LINESTRING (15.6272726 46.5633407, 15.6272137 46.5633648)",
 	"mode": "CAR",
@@ -124,7 +124,7 @@
 	"bikeRentalOffStation": null
 	}, {
 	"edgeId": 57746,
-	"edgeOsmId": 7897897979,
+	"edgeOsmId": 78978,
 	"distance": 14458,
 	"geometry": "LINESTRING (15.6272137 46.5633648, 15.6271413 46.563485)",
 	"mode": "CAR",

@@ -26,7 +26,7 @@ public class OneOriginResult {
     public final TemporalDensityResult density;
 
     /* GP2 edit: add this attribute to save OsmIdResults */
-    public final List<List<Long>> osmIdResults;
+    public final List<List<Integer>> osmIdResults;
 
     /* GP2 edit: add overloaded constructor with default null OsmIdResults */  
     public OneOriginResult(
@@ -44,7 +44,7 @@ public class OneOriginResult {
             AccessibilityResult accessibility,
             PathResult paths,
             TemporalDensityResult density,
-            List<List<Long>> osmIdResults
+            List<List<Integer>> osmIdResults
     ) {
         this.travelTimes = travelTimes;
         this.accessibility = accessibility;

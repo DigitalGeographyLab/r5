@@ -44,13 +44,13 @@ public class CustomCost {
     * see what osmid's we traversed and get the result by accessing the dict with the osmid as the key
     * 
     */
-    public static List<List<Long>> getOsmIdsFromRouterState(PointSetTimes nonTransitTravelTimesToDestinations, StreetRouter sr, TransportNetwork network) {
+    public static List<List<Integer>> getOsmIdsFromRouterState(PointSetTimes nonTransitTravelTimesToDestinations, StreetRouter sr, TransportNetwork network) {
         if(nonTransitTravelTimesToDestinations == null) return null;
 
         // create a list of lists for osmIds
         // populate with empty lists
         // the first list will indicate the point index, the nested list has list of osmids created from StreetRouter.State and StreetPath
-        List<List<Long>> osmIdResults = Stream.generate(ArrayList<Long>::new)
+        List<List<Integer>> osmIdResults = Stream.generate(ArrayList<Integer>::new)
                                         .limit(nonTransitTravelTimesToDestinations.size())
                                         .collect(Collectors.toList());
 
@@ -71,17 +71,18 @@ public class CustomCost {
             // get the all the edge indexes from the path
             LinkedList<Integer> pathEdges = streetPath.getEdges();
             // initialize empty list for osmIds
-            LinkedList<Long> edgeOsmIdsForPath = new LinkedList<>();
+            LinkedList<Integer> edgeOsmIdsForPath = new LinkedList<>();
             // loop through all the edges in the path traversed and get osmids from the edge store
             for (Integer edgeIdx : pathEdges) {
                 EdgeStore.Edge edge = network.streetLayer.edgeStore.getCursor(edgeIdx);
-                edgeOsmIdsForPath.add(edge.getOSMID());
+                int edgeOsmIdInteger = edge.getOSMID();
+                edgeOsmIdsForPath.add(edgeOsmIdInteger);
             }
             // remove dublicate osmIds
             // the router splits the osm ways into node-node segments, so the same osmId can be found multiple times
             // because all child segments have the original parent osmId
             // this all happens because osm ways natively can and most likely will extend over multiple nodes
-            List<Long> uniqueEdgeOsmIdsForPath = edgeOsmIdsForPath.stream().distinct().collect(Collectors.toList());
+            List<Integer> uniqueEdgeOsmIdsForPath = edgeOsmIdsForPath.stream().distinct().collect(Collectors.toList());
             // replace the empty populated list with the unique list if any osmids are found
             if (!uniqueEdgeOsmIdsForPath.isEmpty()) {
                 osmIdResults.set(i, uniqueEdgeOsmIdsForPath);

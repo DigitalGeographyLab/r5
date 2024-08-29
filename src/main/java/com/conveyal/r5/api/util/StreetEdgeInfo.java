@@ -27,7 +27,7 @@ public class StreetEdgeInfo {
     /* GP2 edit: add this attribute for saving the osmid 
      * this is used in point-to-point detailed iteneraries routing in GP2
     */
-    public Long edgeOsmId;
+    public int edgeOsmId;
 
     /**
      * Distance of driving on these edge (milimeters)
