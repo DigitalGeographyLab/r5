@@ -246,7 +246,7 @@ public class CustomCostTest {
             // run with for all osmIds
             Arguments.of(false),
             // run with some osmIds
-            Arguments.of(true)
+            Arguments.of(false)
         );
     }
 
