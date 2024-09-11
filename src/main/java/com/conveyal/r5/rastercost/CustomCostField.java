@@ -200,7 +200,11 @@ public class CustomCostField implements CostField, Serializable {
 
     public HashMap<Integer, Integer> getcustomCostAdditionalTraveltimes() {
         return customCostAdditionalTraveltimes;
-    }   
+    }
+
+    public void resetBaseTraveltimes() {
+        this.baseTraveltimes = new HashMap<Integer, Integer>();
+    }
 
     // convert 1-n custom cost fields to a list of custom cost fields
     public static List<CostField> wrapToEdgeStoreCostFieldsList(CostField... customCostFields) {
