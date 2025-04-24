@@ -1194,12 +1194,6 @@ public class StreetLayer implements Serializable, Cloneable {
         stressLabeler.label(way, forwardFlags, backFlags);
         typeOfEdgeLabeler.label(way, forwardFlags, backFlags);
 
-        // Read bicycle speeds from tags added by Vuokko’s Strava analysis
-        // This assumes perfectly formatted tags
-        if (way.getTag("DGL:bicyclespeed") != null) {
-            newEdge.setBicycleSpeedKph((float) Double.parseDouble(way.getTag("DGL:bicyclespeed")));
-        }
-
         Edge newEdge = edgeStore.addStreetPair(beginVertexIndex, endVertexIndex, edgeLengthMillimeters, osmID);
         // newEdge is first pointing to the forward edge in the pair.
         // Geometries apply to both edges in a pair. Likewise for street classes.
@@ -1216,6 +1210,12 @@ public class StreetLayer implements Serializable, Cloneable {
                 LOG.error("Continuing to load but ignoring generalized costs due to exception: {}", ex.toString());
                 edgeStore.edgeTraversalTimes = null;
             }
+        }
+
+        // Read bicycle speeds from tags added by Vuokko’s Strava analysis
+        // This assumes perfectly formatted tags
+        if (way.getTag("DGL:bicyclespeed") != null) {
+            newEdge.setBicycleSpeedKph((float) Double.parseDouble(way.getTag("DGL:bicyclespeed")));
         }
 
         // Now set characteristics that differ in the forward and backward directions.
