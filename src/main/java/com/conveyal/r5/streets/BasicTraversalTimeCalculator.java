@@ -20,10 +20,11 @@ public class BasicTraversalTimeCalculator implements TraversalTimeCalculator {
     // These are all specified for drive-on-right countries, and reversed in drive-on-left countries.
     // TODO re-express as "turn against traffic" and "turn with traffic" to make this less confusing.
 
-    public static final int LEFT_TURN = 30;
+    // disable all turning penalties after implementing edge traversal times
+    public static final int LEFT_TURN = 0;
     public static final int STRAIGHT_ON = 0;
-    public static final int RIGHT_TURN = 10;
-    public static final int U_TURN = 90; // penalize U turns extremely heavily
+    public static final int RIGHT_TURN = 0;
+    public static final int U_TURN = 0;
 
     public boolean driveOnRight; // TODO instead of a field, this should be a different implementation class
 
